@@ -11,6 +11,7 @@
     <title>Acceuil</title>
 </head>
 <body>
+            <!-- Modal -->
     <div class="bodyModalBackground"></div>
     <section class="modal">
         <h3>Bienvenue dans le Jeu du Pendu !</h3>
@@ -27,7 +28,11 @@
             <button class="modal_boutons_ok">Okey</button>
             <button class="modal_boutons_nePlusAfficher">Ne plus afficher</button>
         </div>
-        <!-- Modal -->
+    </section>
+    <section class="modalResultat">
+        <h3></h3>
+        <p></p>
+        <button></button>
     </section>
     <header>
        <button class="header_recommencer"> Recommencer</button>
@@ -40,12 +45,17 @@
                 <li class="information_jeu_mode">
                    <i class="fa-solid fa-moon fa-flip-horizontal"></i>
                 </li>
-                <li>Vies : <i class="fa-solid fa-heart" style="color: red;"></i> <span></span> </li>
-                <li>Score : 0</li>
-                <li>
-                    <h3>Lettres selectionnées : 0</h3>
-                    <p></p>
+                <li class="information_jeu_vies">Vies : <i class="fa-solid fa-heart" style="color: red;"></i> <span></span> </li>
+                <li class="information_jeu_score">Score :  <span></span></li>
+                <li class="information_jeu_record">
+                    Record : <span></span>
                 </li>
+                <li class="information_jeu_AcheterUneVie">
+                    <button>
+                        Acheter une lettre :  <i class="fa-solid fa-heart" style="color: red;"></i> 2 
+                    </button>
+                </li>
+                <!-- <button>Acheter</button> -->
                 <!-- Acheter une lettre contre 2 vies -->
             </ul>
             <section class="information_mot">

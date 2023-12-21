@@ -31,7 +31,7 @@ body {
     height: 100%;
     display: none;
 }
-.modal {
+.modal, .modalResultat {
     position: fixed;
     z-index: 3;
     top: 50%;
@@ -50,12 +50,12 @@ body {
     border-radius: 15px;
 
 }
- .modal p {
+ .modal p , .modalResultat p {
     color: var(--colorPrimaire);
     text-align: center;
 
 }
-.modal b,.modal h3 {
+.modal b,.modal h3 , .modalResultat h3 {
     color: var(--colorSecondaire);
     text-align: center;
 }
@@ -68,7 +68,7 @@ body {
    margin-top: 10px;
    gap: 10px;
 }
-.modal_boutons button {
+.modal_boutons button , .modalResultat button {
     padding: 5px;
     border-radius: 5px;
     border: 1px solid var(--colorSecondaire);
@@ -78,6 +78,13 @@ body {
 
 
 }
+.modalResultat {
+    gap: 30px;
+}
+.modalResultat p,.modalResultat button {
+    font-size: 20px;
+}
+
 
 header {
     display: flex;
@@ -149,13 +156,21 @@ li {
     transition: all 1s ease;
 }
 
-
+.information_jeu button{
+    width: 180px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--colorQuaternaire);
+    background: var(--colorTertiaire);
+    color: var(--colorPrimaire);
+}
 .information .information_mot {
     align-items: center;
     gap: 30px;
 }
 .information_mot p {
     text-align: center;
+    font-size: 20px;
 }
 .information_image {
     position: absolute;
@@ -181,7 +196,7 @@ li {
     
 }
 .motATrouver h3 {
-    font-size: 30px;
+    font-size: 25px;
 
 }
 .motATrouver div {
