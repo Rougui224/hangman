@@ -11,29 +11,7 @@
     <title>Acceuil</title>
 </head>
 <body>
-            <!-- Modal -->
-    <div class="bodyModalBackground"></div>
-    <section class="modal">
-        <h3>Bienvenue dans le Jeu du Pendu !</h3>
-        <p>
-            "Dans ce défi captivant, vous aurez l'occasion de mettre à l'épreuve votre
-            réflexion et votre perspicacité. Vous serez confronté à un mot mystère
-            dont la <b>description</b> vous est donnée, avec son nombre de lettres. Votre objectif ? 
-            Deviner ce mot en proposant des lettres une par une. Attention, vous n'avez que <b>7 essais</b>
-            pour décoder ce mot caché. Faites preuve de stratégie, utilisez vos 
-            connaissances et votre intuition pour réussir à résoudre cette énigme linguistique !"
-        </p>
-        <div class="modal_ligne"></div>
-        <div class="modal_boutons" >
-            <button class="modal_boutons_ok">Okey</button>
-            <button class="modal_boutons_nePlusAfficher">Ne plus afficher</button>
-        </div>
-    </section>
-    <section class="modalResultat">
-        <h3></h3>
-        <p></p>
-        <button></button>
-    </section>
+
     <header>
        <button class="header_recommencer"> Recommencer</button>
        <h1>Jeu du Pendu</h1>
@@ -107,7 +85,48 @@
            </div>
            
        </section>
+
     </main>
+                <!-- Modal -->
+                <div class="bodyModalBackground"></div>
+                <section class="modal">
+                    <h3>Bienvenue dans le Jeu du Pendu !</h3>
+                    <p>
+                        "Dans ce défi captivant, vous aurez l'occasion de mettre à l'épreuve votre
+                        réflexion et votre perspicacité. Vous serez confronté à un mot mystère
+                        dont la <b>description</b> vous est donnée, avec son nombre de lettres. Votre objectif ? 
+                        Deviner ce mot en proposant des lettres une par une. Attention, vous n'avez que <b>7 essais</b>
+                        pour décoder ce mot caché. Faites preuve de stratégie, utilisez vos 
+                        connaissances et votre intuition pour réussir à résoudre cette énigme linguistique !"
+                    </p>
+                    <div class="modal_ligne"></div>
+                    <div class="modal_boutons" >
+                        <button class="modal_boutons_ok">Okey</button>
+                        <button class="modal_boutons_nePlusAfficher">Ne plus afficher</button>
+                    </div>
+                </section>
+                <section class="modalResultat">
+                    <h3></h3>
+                    <p></p>
+                    <button></button>
+                </section>
+             
+                    <form class="modalFormulaireProposerMot">
+                        <i class="fa-solid fa-x"></i>
+                        <h3>Proposer un mot</h3>
+                        <fieldset>
+                            <label for="mot">Mot </label>
+                            <input type="text" id="mot" name="mot">
+                        </fieldset>
+                        <fieldset>
+                            <label for="description">Description</label>
+                            <textarea  id="description" name="description"></textarea>
+                        </fieldset>
+                        <div class="modal_ligne"></div>
+                        <button>Envoyer</button>
+                    </form>
+
+                
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

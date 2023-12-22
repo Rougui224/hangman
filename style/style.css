@@ -31,7 +31,7 @@ body {
     height: 100%;
     display: none;
 }
-.modal, .modalResultat {
+.modal, .modalResultat,.modalFormulaireProposerMot {
     position: fixed;
     z-index: 3;
     top: 50%;
@@ -50,15 +50,42 @@ body {
     border-radius: 15px;
 
 }
- .modal p , .modalResultat p {
+.modalFormulaireProposerMot {
+    justify-content: space-evenly;
+}
+.modalFormulaireProposerMot fieldset {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+    border: none;
+}
+.modalFormulaireProposerMot input, .modalFormulaireProposerMot textarea{
+    width: 100%;
+    max-width: 300px;
+    min-height: 40px;
+}
+.modal p , .modalResultat p,.modalFormulaireProposerMot label {
     color: var(--colorPrimaire);
     text-align: center;
 
 }
-.modal b,.modal h3 , .modalResultat h3 {
+.fa-x {
+    color: var(--colorPrimaire); 
+    position: relative;
+    left: 180px;
+    bottom: 7px;
+    font-size: 13px;
+}
+.modal b,.modal h3 , .modalResultat h3 ,.modalFormulaireProposerMot h3{
     color: var(--colorSecondaire);
     text-align: center;
 }
+.modalFormulaireProposerMot .modal_ligne {
+    width: 300px;
+}
+
 .modal_ligne {
     width: 200px;
     border: 1px solid var(--colorSecondaire);
@@ -68,7 +95,7 @@ body {
    margin-top: 10px;
    gap: 10px;
 }
-.modal_boutons button , .modalResultat button {
+.modal_boutons button , .modalResultat button ,.modalFormulaireProposerMot button{
     padding: 5px;
     border-radius: 5px;
     border: 1px solid var(--colorSecondaire);
