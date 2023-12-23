@@ -31,7 +31,7 @@ body {
     height: 100%;
     display: none;
 }
-.modal, .modalResultat,.modalFormulaireProposerMot {
+.modal, .modalResultat,.modalFormulaireProposerMot , .modalMessage{
     position: fixed;
     z-index: 3;
     top: 50%;
@@ -65,8 +65,9 @@ body {
     width: 100%;
     max-width: 300px;
     min-height: 40px;
+    max-height: 70px  ;
 }
-.modal p , .modalResultat p,.modalFormulaireProposerMot label {
+.modal p , .modalResultat p,.modalFormulaireProposerMot label ,.modalMessage p {
     color: var(--colorPrimaire);
     text-align: center;
 
@@ -95,7 +96,7 @@ body {
    margin-top: 10px;
    gap: 10px;
 }
-.modal_boutons button , .modalResultat button ,.modalFormulaireProposerMot button{
+.modal_boutons button , .modalResultat button ,.modalFormulaireProposerMot button ,.modalMessage button{
     padding: 5px;
     border-radius: 5px;
     border: 1px solid var(--colorSecondaire);
@@ -108,10 +109,12 @@ body {
 .modalResultat {
     gap: 30px;
 }
-.modalResultat p,.modalResultat button {
+.modalResultat p,.modalResultat button , .modalMessage p , .modalMessage button {
     font-size: 20px;
 }
-
+.modalMessage {
+    height: 200px;
+}
 
 header {
     display: flex;

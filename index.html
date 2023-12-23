@@ -111,20 +111,26 @@
                     <button></button>
                 </section>
              
-                    <form class="modalFormulaireProposerMot">
-                        <i class="fa-solid fa-x"></i>
-                        <h3>Proposer un mot</h3>
-                        <fieldset>
-                            <label for="mot">Mot </label>
-                            <input type="text" id="mot" name="mot">
-                        </fieldset>
-                        <fieldset>
-                            <label for="description">Description</label>
-                            <textarea  id="description" name="description"></textarea>
-                        </fieldset>
-                        <div class="modal_ligne"></div>
-                        <button>Envoyer</button>
-                    </form>
+                <form class="modalFormulaireProposerMot">
+                    <i class="fa-solid fa-x"></i>
+                    <h3>Proposer un mot</h3>
+                    <fieldset>
+                        <label for="mot">Mot </label>
+                        <input type="text" id="mot" name="mot" required>
+                    </fieldset>
+                    <fieldset>
+                        <label for="description">Description</label>
+                        <textarea  id="description" name="description" required></textarea>
+                    </fieldset>
+                    <div class="modal_ligne"></div>
+                    <button>Envoyer</button>
+                </form>
+                <section class="modalMessage">
+                    <p></p>
+                    <button>Okey</button>
+
+                </section>
+
 
                 
   <script type="module" src="js/main.js"></script>

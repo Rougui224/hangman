@@ -16,6 +16,10 @@ const boutonRecommencer              = document.querySelector('.header_recommenc
 const boutonProposerMot              = document.querySelector('.header_proposerUnMot')
 const ModalProposerMot               = document.querySelector('.modalFormulaireProposerMot')
 const quitterModalProposerMot        = document.querySelector('.modalFormulaireProposerMot .fa-x')
+const formModalProposerMot           = document.querySelector('.modalFormulaireProposerMot ')
+const ModalMessage                   = document.querySelector('.modalMessage ')
+const ModalMessageP                  = document.querySelector('.modalMessage p ')
+const ModalMessageBouton             = document.querySelector('.modalMessage button')
 const clavier                        = document.querySelectorAll('.clavier button')
 const afficherVie                    = document.querySelector('.information_jeu_vies span')
 const afficherScore                  = document.querySelector('.information_jeu_score span')
@@ -24,7 +28,7 @@ const acheterUneLettre               = document.querySelector('.information_jeu_
 const afficherResultat               = document.querySelector('.modalResultat')
 const h3                             = document.querySelector('.modalResultat h3')
 const p                              = document.querySelector('.modalResultat p')
-const boutonModalResultat                         = document.querySelector('.modalResultat button')
+const boutonModalResultat            = document.querySelector('.modalResultat button')
 
 // ***************Stockage de l'etat du jeu *************************
 window.addEventListener('load', ()=>{
@@ -51,7 +55,7 @@ window.addEventListener('load', ()=>{
     if(localStorage.getItem('score')){
         score = localStorage.getItem('score')
         afficherScore.textContent = score
-        console.log('score stocké au debut de la page ' + score)
+        // console.log('score stocké au debut de la page ' + score)
     }
     // Verifier si l'utilisateur n'avait pas terminé de trouver les lettres avant de quitter le jeu, pour lui permettre de recommencer là ou il s'etait limité
     if(localStorage.getItem('etatJeu')){
@@ -62,6 +66,7 @@ window.addEventListener('load', ()=>{
         motChoisi          = etat.motChoisi
         description        = etat.description
         lettresIncorrectes = etat.lettresIncorrectes
+        IndicesAchetes     = etat.IndicesAchetes
         const lettresSauvegardees = etat.lettresDejaTrouvees;
         console.log(lettresSauvegardees)
         for (let i = 0; i < motChoisi.length; i++) {
@@ -70,7 +75,6 @@ window.addEventListener('load', ()=>{
             afficherMotATrouver.appendChild(bouton);
         }
         lettres = document.querySelectorAll('.motATrouver button')
-        console.log(lettres)
         // remetre le style des boutons
         let lettreClavier
         lettres.forEach(bouton=>{
@@ -94,6 +98,43 @@ window.addEventListener('load', ()=>{
                 }
             })
         })
+
+        // Vérifier si une lettre a été achetée et est présente plusieurs fois dans le mot que l'utilisateur ignore
+        if(IndicesAchetes.length>0){
+            // Parcourir les lettres déjà achetées
+            IndicesAchetes.forEach(indice =>{
+                const lettreAchetee = motChoisi[indice]
+                // Compter le nombre d'occurrences de la lettre achetée dans le mot
+                const occurences    = motChoisi.split(lettreAchetee).length-1
+                console.log('lettre acheter '+ lettreAchetee + " son occurence est " + occurences)
+
+                //  Si la lettre est présente plusieurs fois 
+                if (occurences > 1 ) {
+                    const indicesLettre = [];
+
+                    // Trouver tous les indices où la lettre achetée se trouve dans le mot
+                    for (let i = 0; i < motChoisi.length; i++) {
+                        if (motChoisi[i] === lettreAchetee) {
+                            indicesLettre.push(i);
+                        }
+                    }
+                    // Vérifier si un bouton correspondant à cette lettre n'a pas encore été découvert
+                    const indiceLettreNonDecouvert = indicesLettre.find((index) => lettres[index].textContent === '_');
+                    // indiceLettreNonDecouvert retourne undefined si l'utilasateurs a deja entré la lettre dans le clavier                
+                    if(indiceLettreNonDecouvert !== undefined){
+                         // Désactiver le bouton correspondant à cette lettre dans le clavier
+                        clavier.forEach((bouton) => {
+                            if (bouton.textContent.toUpperCase() === lettreAchetee) {
+                                bouton.disabled = false;
+                                bouton.classList.remove('boutonValide');
+                            }
+                        });
+                    }
+
+                }
+
+            })
+        }
         afficherDescription.innerHTML=`" ${description} "` 
         // Restaurer le nombre de vies
         vies = etat.vies;
@@ -242,7 +283,8 @@ function sauvegarderEtatJeu(){
         description,
         lettresDejaTrouvees,
         vies,
-        lettresIncorrectes: lettresIncorrectes
+        lettresIncorrectes,
+        IndicesAchetes
     }
     // on sauvegarde l'etat actuel du jeu
     localStorage.setItem('etatJeu', JSON.stringify(etatJeu));
@@ -358,6 +400,7 @@ acheterUneLettre.addEventListener('click', ()=>{
         let lettreAchetee = motChoisi[variableAleatoireAchete]
         let occurences    = motChoisi.split(lettreAchetee).length-1
         console.log('voici l\'occurence de la lettre acheter '+ occurences)
+        console.log(sauvegarderEtatJeu())
 
         if(occurences ===1){
             clavier.forEach(bouton => {
@@ -368,13 +411,27 @@ acheterUneLettre.addEventListener('click', ()=>{
                 }
             });
         }
+
+    }
+    else{
+        ModalMessage.style.display='flex'
+        ModalMessageP.textContent =`Vous avez besoin d'au moins trois vies pour acheter une lettre. Vous n'en avez pas assez pour le moment. Revenez lorsque vous aurez collecté davantage de vies !`
     }
     console.log(IndicesAchetes)
 
 })
+formModalProposerMot.addEventListener('submit', (event)=>{
+    event.preventDefault()
+    const mot = event.target.querySelector('[name=mot]').value
+    const description = event.target.querySelector('[name=description]').value
+    formModalProposerMot.style.display='none'
+    ModalMessage.style.display='flex'
+    ModalMessageP.textContent =`Merci pour votre proposition ! Nous allons évaluer le mot "${mot}" avec la description <<${description}>> et envisager de l'ajouter au jeu`
+})
+ModalMessageBouton.addEventListener('click', ()=>{
+    ModalMessage.style.display='none'
+})
 verifierJeu()
 
 
-// window.addEventListener('load', ()=>{
-//     const cacherModal =
-// })
+
