@@ -66,6 +66,7 @@ body {
     max-width: 300px;
     min-height: 40px;
     max-height: 70px  ;
+    color: var(--colorTertiaire);
 }
 .modal p , .modalResultat p,.modalFormulaireProposerMot label ,.modalMessage p {
     color: var(--colorPrimaire);
@@ -79,7 +80,7 @@ body {
     bottom: 7px;
     font-size: 13px;
 }
-.modal b,.modal h3 , .modalResultat h3 ,.modalFormulaireProposerMot h3{
+.modal b,.modal h3 , .modalResultat h3 ,.modalFormulaireProposerMot h3 , .modalMessage h3{
     color: var(--colorSecondaire);
     text-align: center;
 }
@@ -113,7 +114,7 @@ body {
     font-size: 20px;
 }
 .modalMessage {
-    height: 200px;
+    height: 250px;
 }
 
 header {
@@ -147,7 +148,7 @@ main {
 }
 .information {
     width: 66.6%;
-    height: 160px;
+    height: 175px;
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -165,7 +166,12 @@ main {
 }
 li {
     list-style-type: none;
+    display: inline-block;
 }
+.information_jeu_volume i {
+    color: var(--colorTertiaire);
+}
+
 .information_jeu_mode{
     width: 50px;
     height: 25px;
@@ -279,4 +285,88 @@ li {
     background-color: var(--colorPrimaire);
 
     text-decoration: line-through;
+}
+@media all and (max-width:1300px) {
+
+    .information_mot h3 {
+        text-align: center;
+    }  
+    .information_mot p {
+        font-size: 16px;
+    }  
+    .motATrouver {
+        justify-content: start;
+    }
+    .motATrouver h3 {
+        font-size: 16px;
+    }
+    .motATrouver button , .clavier button{
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+    }
+    .clavier button{
+        font-size: 30px;
+        width: 40px;
+        height: 40px;
+    }
+}
+@media all and (max-width:1000px) {
+    
+    /* .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+    } */
+    body {
+        padding: 0px 5px;
+    }
+    header {
+        height: 53px;
+        align-items: center;
+    }
+    header button , header h1 {
+        font-size: 13px;
+    }
+    .information {
+        width: 100%;
+        height: 283px;
+        flex-direction: column;
+    }
+    .information li ,  .information button , .information h3 , .information p,.motATrouver h3{
+        font-size: 13px;
+        width: auto;
+    }
+    .information .information_jeu_mode {
+        width: 50px;
+    }
+    .information_image {
+        height: 291px;
+        width: 46%;
+        top: 54px;
+        right: 5px;
+    }
+    .motATrouver {
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        height: 80px;
+    }
+    .motATrouver button {
+        font-size: 12px;
+        width: 15px;
+        height: 20px;
+    }
+    .clavier {
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+    }
+    .clavier button {
+        font-size: 19px;
+        width: 20px;
+        height: 35px;
+    }
 }

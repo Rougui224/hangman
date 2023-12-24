@@ -6,6 +6,9 @@ const root                           = document.documentElement
 // les autres éléments html
 const body                           = document.body;
 const boutonMode                     = document.querySelector('.information_jeu_mode')
+const boutonVolume                   = document.querySelector('.information_jeu_volume')
+const iconVolumeActive               = document.querySelector('.information_jeu_volume .fa-volume-high')
+const iconVolumeDesactive            = document.querySelector('.information_jeu_volume .fa-volume-xmark')
 const modal                          = document.querySelector('.modal')
 const boutonModalOK                  = document.querySelector('.modal_boutons_ok')
 const boutonModalNePlusAfficher      = document.querySelector('.modal_boutons_nePlusAfficher')
@@ -18,6 +21,7 @@ const ModalProposerMot               = document.querySelector('.modalFormulaireP
 const quitterModalProposerMot        = document.querySelector('.modalFormulaireProposerMot .fa-x')
 const formModalProposerMot           = document.querySelector('.modalFormulaireProposerMot ')
 const ModalMessage                   = document.querySelector('.modalMessage ')
+const ModalMessageTitle              = document.querySelector('.modalMessage h3 ')
 const ModalMessageP                  = document.querySelector('.modalMessage p ')
 const ModalMessageBouton             = document.querySelector('.modalMessage button')
 const clavier                        = document.querySelectorAll('.clavier button')
@@ -32,6 +36,28 @@ const boutonModalResultat            = document.querySelector('.modalResultat bu
 
 // ***************Stockage de l'etat du jeu *************************
 window.addEventListener('load', ()=>{
+    // Vérifier si le volume est active
+    if(localStorage.getItem('volume')){
+        volumeActive = localStorage.getItem('volume')
+        console.log(volumeActive)
+        if(volumeActive ==='true'){
+            volumeActive = true
+            iconVolumeActive.style.display ='inline'
+            iconVolumeDesactive.style.display ='none'
+
+            console.log('volume active')
+
+        }else{
+            iconVolumeActive.style.display ='none'
+            iconVolumeDesactive.style.display ='inline'
+            audioBoutonNonValide.pause()
+            audioBoutonValide.pause()
+            audioDommage.pause()
+            audioFelicitation.pause()
+            console.log('volume desactive')
+            volumeActive = false
+        }
+    }
     // Vérifier si le thème sombre est déjà activé via le localStorage
     if(localStorage.getItem('theme')){
         if(localStorage.getItem('theme') =='sombre'){
@@ -41,9 +67,9 @@ window.addEventListener('load', ()=>{
 
     // Vérification si l'utilisateur a choisi de ne plus afficher le modal de BIENVENU
     if(localStorage.getItem('NePlusAfficher')){
-        fermerModal()
+        fermerElement(modal)
     }else {
-        afficherModal()
+        afficherElement(modal)
     }
     // Verifier si un record existe deja 
     if(localStorage.getItem('record')){
@@ -67,6 +93,10 @@ window.addEventListener('load', ()=>{
         description        = etat.description
         lettresIncorrectes = etat.lettresIncorrectes
         IndicesAchetes     = etat.IndicesAchetes
+        afficherDescription.innerHTML=`" ${description} "` 
+        // Restaurer le nombre de vies
+        vies = etat.vies;
+        afficherVie.textContent = vies;
         const lettresSauvegardees = etat.lettresDejaTrouvees;
         console.log(lettresSauvegardees)
         for (let i = 0; i < motChoisi.length; i++) {
@@ -135,16 +165,52 @@ window.addEventListener('load', ()=>{
 
             })
         }
-        afficherDescription.innerHTML=`" ${description} "` 
-        // Restaurer le nombre de vies
-        vies = etat.vies;
-        afficherVie.textContent = vies;
+        jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
+
+        if(!jeuNonValide){                    
+            motTrouve()
+            console.log(jeuNonValide)
+
+        }
+      
     }else{
         recommencerJeu()
     }
 })
 // ***********fonctions et conditions***************************
- 
+let volumeActive = true
+function gererVolume(){
+    if(volumeActive){
+        iconVolumeActive.style.display ='none'
+        iconVolumeDesactive.style.display ='inline'
+        volumeActive = false
+        audioBoutonNonValide.pause()
+        audioBoutonValide.pause()
+        audioDommage.pause()
+        audioFelicitation.pause()
+        console.log('volume desactive')
+    }
+    else {
+        iconVolumeActive.style.display ='inline'
+        iconVolumeDesactive.style.display ='none'
+        volumeActive = true
+    }
+    console.log('volume')
+    localStorage.setItem('volume',volumeActive.toString())
+}
+function jouerSon(audio){
+    if(volumeActive){
+        audio.currentTime =0
+       const playPromise = audio.play()
+       if(playPromise !== undefined){
+            playPromise.then(() =>{
+                // audio.pause()
+            }).catch(error => {
+                console.log('errur lors de la lecture du son :', error)
+            })
+        }
+    }
+}
 
 function gerertheme(){
 
@@ -176,15 +242,15 @@ function modeSombre(){
     boutonMode.style.justifyContent='flex-end'
     localStorage.setItem('theme','sombre')
 }
-function afficherModal(){
-    modal.style.display ='flex'
+
+function afficherElement(element){
+    element.style.display ='flex'
     backgroundModal.style.display ='block'
 }
-function fermerModal(){
-    modal.style.display ='none'
+function fermerElement(element){
+    element.style.display ='none'
     backgroundModal.style.display ='none'
 }
-
 
 // **********************jeu*****************************
 let dernierIndex      = 0
@@ -208,33 +274,30 @@ function mettreAjourScore(){
     score = 0
     localStorage.setItem('score', score)
     afficherScore.textContent = score
-    console.log('score stocké dans la fonction miseAJourScore ' + score)
 
 }
 
 function motTrouve(){
-    afficherResultat.style.display ='flex'
+    setTimeout( ()=>{afficherElement(afficherResultat)},1000)
+   
     score++
     localStorage.setItem('score', score)
     afficherScore.textContent = score
-    console.log('score stocké dans fonction mot trouver, ' + score)
 
     if(score> record){
        record++
        afficherRecord.textContent = record
        localStorage.setItem('record', record)
     }
-    audioBoutonValide.pause()
-    audioBoutonValide.currentTime =0
-    audioFelicitation.play()
+    jouerSon(audioFelicitation)
     h3.textContent     =`🎉🎉🎉🎉🎉 Félicitations 🎉🎉🎉🎉`
     p.textContent      = `Vous avez gagné ! Vous avez deviné le mot ${motChoisi}. Bravo pour cette performance impressionnante ! `
     boutonModalResultat.textContent = `Continuer`
 }
 function motNonTrouver(){
     mettreAjourScore()
-    afficherResultat.style.display ='flex'
-    audioDommage.play()
+    setTimeout(()=>{afficherElement(afficherResultat)},1000)
+    jouerSon(audioDommage)
     h3.textContent     =`😔😔 Dommage 😔😔`
     p.textContent      = `Vous avez perdu. Le mot était ${motChoisi}. Ne vous découragez pas, essayez à nouveau et vous finirez par réussir !  ! `
     boutonModalResultat.textContent = `Recommencer`
@@ -299,7 +362,7 @@ function verifierJeu(){
             const bouton = event.target
             const lettre = bouton.value.toUpperCase()
             if(motChoisi.includes(lettre)){
-                audioBoutonValide.play()
+                jouerSon(audioBoutonValide)
                 bouton.classList.add('boutonValide')
                 bouton.disabled = true;
                 for(let i=0; i<motChoisi.length; i++){
@@ -320,11 +383,10 @@ function verifierJeu(){
                 // si toutes les lettres sont trouvées, alors le joueur  a gagné
                 if(!jeuNonValide){                    
                     motTrouve()
-                    console.log(jeuNonValide)
 
                 }
             }else{
-                audioBoutonNonValide.play()
+                jouerSon(audioBoutonNonValide)
                 audioBoutonNonValide.volume = 0.6
                 lettresIncorrectes.push(bouton.textContent)
                 vies--
@@ -349,12 +411,13 @@ function genererNombreAleatoireAcheter(){
 }
 
 // ************** Les evenements *************************
+boutonVolume.addEventListener('click', gererVolume)
 // Écouteur d'événement pour le bouton de commutation de thème
 boutonMode.addEventListener('click', gerertheme)
-boutonModalOK.addEventListener('click', fermerModal)
+boutonModalOK.addEventListener('click', fermerElement(modal))
 boutonModalNePlusAfficher.addEventListener('click', ()=>{
     localStorage.setItem('NePlusAfficher', 'true')
-    fermerModal()
+    fermerElement(modal)
 })
 boutonRecommencer.addEventListener('click',()=>{
     mettreAjourScore()
@@ -364,10 +427,10 @@ boutonRecommencer.addEventListener('click',()=>{
     recommencerJeu()
 })
 boutonProposerMot.addEventListener('click', ()=>{
-    ModalProposerMot.style.display = 'flex'
+    afficherElement(ModalProposerMot)
 })
 quitterModalProposerMot.addEventListener('click', ()=>{
-    ModalProposerMot.style.display = 'none'
+    fermerElement(ModalProposerMot)
 })
 
 boutonModalResultat.addEventListener('click', ()=>{
@@ -375,7 +438,7 @@ boutonModalResultat.addEventListener('click', ()=>{
     audioFelicitation.currentTime=0
     audioDommage.pause()
     audioDommage.currentTime=0
-    afficherResultat.style.display ='none'
+    fermerElement(afficherResultat)
     localStorage.removeItem('etatJeu')
     recommencerJeu()
 })
@@ -411,10 +474,18 @@ acheterUneLettre.addEventListener('click', ()=>{
                 }
             });
         }
+        jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
+
+        if(!jeuNonValide){                    
+            motTrouve()
+            console.log(jeuNonValide)
+
+        }
 
     }
     else{
-        ModalMessage.style.display='flex'
+        afficherElement(ModalMessage)
+        ModalMessageTitle.textContent =` 😕 Vies Insuffisantes 😕`
         ModalMessageP.textContent =`Vous avez besoin d'au moins trois vies pour acheter une lettre. Vous n'en avez pas assez pour le moment. Revenez lorsque vous aurez collecté davantage de vies !`
     }
     console.log(IndicesAchetes)
@@ -424,12 +495,13 @@ formModalProposerMot.addEventListener('submit', (event)=>{
     event.preventDefault()
     const mot = event.target.querySelector('[name=mot]').value
     const description = event.target.querySelector('[name=description]').value
-    formModalProposerMot.style.display='none'
-    ModalMessage.style.display='flex'
+    fermerElement(formModalProposerMot)
+    afficherElement(ModalMessage)
+    ModalMessageTitle.textContent =` Proposer mot`
     ModalMessageP.textContent =`Merci pour votre proposition ! Nous allons évaluer le mot "${mot}" avec la description <<${description}>> et envisager de l'ajouter au jeu`
 })
 ModalMessageBouton.addEventListener('click', ()=>{
-    ModalMessage.style.display='none'
+    fermerElement(ModalMessage)
 })
 verifierJeu()
 
