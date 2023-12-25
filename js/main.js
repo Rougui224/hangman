@@ -414,7 +414,7 @@ function genererNombreAleatoireAcheter(){
 boutonVolume.addEventListener('click', gererVolume)
 // Écouteur d'événement pour le bouton de commutation de thème
 boutonMode.addEventListener('click', gerertheme)
-boutonModalOK.addEventListener('click', fermerElement(modal))
+boutonModalOK.addEventListener('click', ()=> fermerElement(modal))
 boutonModalNePlusAfficher.addEventListener('click', ()=>{
     localStorage.setItem('NePlusAfficher', 'true')
     fermerElement(modal)
