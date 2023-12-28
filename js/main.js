@@ -263,10 +263,10 @@ let description       = ''
 let lettres           = ''
 let jeuNonValide      = true
 let variableAleatoireAchete , IndicesAchetes=[]
-const audioBoutonValide    = new Audio('../audio/boutonValide.m4a')
-const audioBoutonNonValide = new Audio('../audio/boutonNonValide.m4a')
-const audioFelicitation    = new Audio('../audio/jeuGagne.mp3')
-const audioDommage         = new Audio('../audio/jeuPerdu.mp3')
+const audioBoutonValide    = new Audio('./audio/boutonValide.m4a')
+const audioBoutonNonValide = new Audio('./audio/boutonNonValide.m4a')
+const audioFelicitation    = new Audio('./audio/jeuGagne.mp3')
+const audioDommage         = new Audio('./audio/jeuPerdu.mp3')
 function genererNombreAleatoire( tableau){
     return  Math.floor(Math.random()* tableau)
 }
