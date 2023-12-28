@@ -27,6 +27,8 @@ const ModalMessageBouton             = document.querySelector('.modalMessage but
 const clavier                        = document.querySelectorAll('.clavier button')
 const afficherVie                    = document.querySelector('.information_jeu_vies span')
 const afficherScore                  = document.querySelector('.information_jeu_score span')
+const afficherImage                 = document.querySelector('.information_image img')
+
 const afficherRecord                 = document.querySelector('.information_jeu_record span')
 const acheterUneLettre               = document.querySelector('.information_jeu_AcheterUneVie button')
 const afficherResultat               = document.querySelector('.modalResultat')
@@ -97,6 +99,7 @@ window.addEventListener('load', ()=>{
         // Restaurer le nombre de vies
         vies = etat.vies;
         afficherVie.textContent = vies;
+        afficherImage.src= `images/image-${vies}.png`
         const lettresSauvegardees = etat.lettresDejaTrouvees;
         console.log(lettresSauvegardees)
         for (let i = 0; i < motChoisi.length; i++) {
@@ -331,6 +334,7 @@ function recommencerJeu(){
     })
     vies=7
     afficherVie.textContent=vies
+    afficherImage.src= `images/image-${vies}.png`
     IndicesAchetes=[]
     lettresIncorrectes =[]
     dernierIndex = variableAleatoire
@@ -391,10 +395,12 @@ function verifierJeu(){
                 lettresIncorrectes.push(bouton.textContent)
                 vies--
                 afficherVie.textContent=vies
+                afficherImage.src= `images/image-${vies}.png`
                 bouton.disabled = true;
                 console.log(sauvegarderEtatJeu())
                 bouton.classList.add('boutonNonValide')
                 if(vies===0){
+                    afficherImage.src= `images/image-${vies}.png`
                     motNonTrouver()
 
                 }
@@ -403,6 +409,8 @@ function verifierJeu(){
     })
    
     afficherVie.textContent=vies
+    afficherRecord.textContent=record
+    afficherScore.textContent = score
     dernierIndex=variableAleatoire
 
 }
