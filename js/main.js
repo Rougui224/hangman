@@ -41,13 +41,11 @@ window.addEventListener('load', ()=>{
     // Vérifier si le volume est active
     if(localStorage.getItem('volume')){
         volumeActive = localStorage.getItem('volume')
-        console.log(volumeActive)
         if(volumeActive ==='true'){
             volumeActive = true
             iconVolumeActive.style.display ='inline'
             iconVolumeDesactive.style.display ='none'
 
-            console.log('volume active')
 
         }else{
             iconVolumeActive.style.display ='none'
@@ -56,7 +54,6 @@ window.addEventListener('load', ()=>{
             audioBoutonValide.pause()
             audioDommage.pause()
             audioFelicitation.pause()
-            console.log('volume desactive')
             volumeActive = false
         }
     }
@@ -83,13 +80,11 @@ window.addEventListener('load', ()=>{
     if(localStorage.getItem('score')){
         score = localStorage.getItem('score')
         afficherScore.textContent = score
-        // console.log('score stocké au debut de la page ' + score)
     }
     // Verifier si l'utilisateur n'avait pas terminé de trouver les lettres avant de quitter le jeu, pour lui permettre de recommencer là ou il s'etait limité
     if(localStorage.getItem('etatJeu')){
         const etatJeu = localStorage.getItem('etatJeu');
         const etat = JSON.parse(etatJeu)
-        console.log(etat)
         // Restaurer le mot avec les lettres déjà trouvées
         motChoisi          = etat.motChoisi
         description        = etat.description
@@ -101,7 +96,7 @@ window.addEventListener('load', ()=>{
         afficherVie.textContent = vies;
         afficherImage.src= `images/image-${vies}.png`
         const lettresSauvegardees = etat.lettresDejaTrouvees;
-        console.log(lettresSauvegardees)
+        lettresSauvegardees
         for (let i = 0; i < motChoisi.length; i++) {
             const bouton = document.createElement('button');
             bouton.textContent = lettresSauvegardees[i] !== '_' ? lettresSauvegardees[i] : '_';
@@ -139,7 +134,6 @@ window.addEventListener('load', ()=>{
                 const lettreAchetee = motChoisi[indice]
                 // Compter le nombre d'occurrences de la lettre achetée dans le mot
                 const occurences    = motChoisi.split(lettreAchetee).length-1
-                console.log('lettre acheter '+ lettreAchetee + " son occurence est " + occurences)
 
                 //  Si la lettre est présente plusieurs fois 
                 if (occurences > 1 ) {
@@ -172,7 +166,6 @@ window.addEventListener('load', ()=>{
 
         if(!jeuNonValide){                    
             motTrouve()
-            console.log(jeuNonValide)
 
         }
       
@@ -191,14 +184,12 @@ function gererVolume(){
         audioBoutonValide.pause()
         audioDommage.pause()
         audioFelicitation.pause()
-        console.log('volume desactive')
     }
     else {
         iconVolumeActive.style.display ='inline'
         iconVolumeDesactive.style.display ='none'
         volumeActive = true
     }
-    console.log('volume')
     localStorage.setItem('volume',volumeActive.toString())
 }
 function jouerSon(audio){
@@ -315,7 +306,6 @@ function recommencerJeu(){
     const motsEnMajuscules     = mots.map(mot => mot.toUpperCase())
 
     motChoisi            = motsEnMajuscules[variableAleatoire]
-    console.log(motChoisi)
     description          = descriptions[variableAleatoire]
     afficherMotATrouver.innerHTML=''
     afficherDescription.innerHTML=''
@@ -378,7 +368,7 @@ function verifierJeu(){
 
                         lettres[i].textContent=lettre
                         lettres[i].classList.add('boutonValide')
-                        console.log(sauvegarderEtatJeu())
+                        sauvegarderEtatJeu()
 
                     }
                 }
@@ -397,7 +387,7 @@ function verifierJeu(){
                 afficherVie.textContent=vies
                 afficherImage.src= `images/image-${vies}.png`
                 bouton.disabled = true;
-                console.log(sauvegarderEtatJeu())
+                sauvegarderEtatJeu()
                 bouton.classList.add('boutonNonValide')
                 if(vies===0){
                     afficherImage.src= `images/image-${vies}.png`
@@ -429,8 +419,6 @@ boutonModalNePlusAfficher.addEventListener('click', ()=>{
 })
 boutonRecommencer.addEventListener('click',()=>{
     mettreAjourScore()
-    console.log(score)
-    console.log(localStorage.getItem('score'))
     localStorage.removeItem('etatJeu')
     recommencerJeu()
 })
@@ -465,13 +453,11 @@ acheterUneLettre.addEventListener('click', ()=>{
         lettres[variableAleatoireAchete].classList.add('boutonValide')
         // Ajouter la lettre au tableau des indices qui sont deja trouver pour eviter que l'utilisateur achete 2fois le même indice
         IndicesAchetes.push(variableAleatoireAchete)
-        console.log(variableAleatoireAchete)
 
         // Sécuriser 
         let lettreAchetee = motChoisi[variableAleatoireAchete]
         let occurences    = motChoisi.split(lettreAchetee).length-1
-        console.log('voici l\'occurence de la lettre acheter '+ occurences)
-        console.log(sauvegarderEtatJeu())
+        sauvegarderEtatJeu()
 
         if(occurences ===1){
             clavier.forEach(bouton => {
@@ -486,7 +472,6 @@ acheterUneLettre.addEventListener('click', ()=>{
 
         if(!jeuNonValide){                    
             motTrouve()
-            console.log(jeuNonValide)
 
         }
 
@@ -496,7 +481,6 @@ acheterUneLettre.addEventListener('click', ()=>{
         ModalMessageTitle.textContent =` 😕 Vies Insuffisantes 😕`
         ModalMessageP.textContent =`Vous avez besoin d'au moins trois vies pour acheter une lettre. Vous n'en avez pas assez pour le moment. Revenez lorsque vous aurez collecté davantage de vies !`
     }
-    console.log(IndicesAchetes)
 
 })
 formModalProposerMot.addEventListener('submit', (event)=>{

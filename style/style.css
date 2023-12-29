@@ -316,15 +316,7 @@ li {
         height: 40px;
     }
 }
-@media all and (max-width:1000px) {
-    
-    /* .material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
-    } */
+@media all and (max-width: 1000px) and (min-width: 550px) {
     body {
         padding: 0px 5px;
     }
@@ -336,9 +328,98 @@ li {
         font-size: 13px;
     }
     .information {
-        width: 100%;
-        height: 291px;
+        width:calc(100% - 215px) ;
+        height: 320px;
         flex-direction: column;
+        justify-content: start;
+        gap: 10px;
+    }
+    .information_image {
+        height: 320px;
+        width: 210px;
+        right: 5px;
+    }
+    .information .information_mot {
+        height: 162px;
+        width: 100%;
+    }
+    .information .information_jeu {
+        width: 100%;
+    }
+    /* .information li ,  .information button , .information h3 , .information p,.motATrouver h3{
+        font-size: 13px;
+        width: auto;
+    } */
+    .information .information_jeu_mode {
+        width: 50px;
+    }
+    .motATrouver {
+        padding: 5px;
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        height: 80px;
+    }
+
+    .clavier {
+        padding-top: 40px;
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+        gap: 20%;
+    }
+    .clavier div:nth-of-type(1){
+        gap: 5px;
+    }
+    .clavier div:nth-of-type(2){
+        gap: 3px;
+    }
+    .clavier div:nth-of-type(3){
+        gap: 5px;
+    }
+
+    .modalFormulaireProposerMot ,.modalMessage , .modal ,.modalResultat{
+        width: 70%;
+        height: 300px;
+        justify-content: center;
+        gap: 10px;
+    }
+    .modalMessage {
+        gap: 20px;
+    }
+    .modal {
+        width: 80%;
+        height: 390px;
+    }
+    .modalFormulaireProposerMot fieldset , .modalFormulaireProposerMot .modal_ligne {
+        width: 80%;
+        margin:  0 auto;
+    }
+    .modalFormulaireProposerMot label , .modalMessage h3 , .modalMessage p , .modalMessage button , .modal p, .modal h3 , .modal button{
+        font-size: 15px;
+    }
+    .modalFormulaireProposerMot input, .modalFormulaireProposerMot textarea {
+        max-width: 100%;
+    }
+}
+@media all and (max-width:549px) {
+
+    body {
+        padding: 0px 5px;
+    }
+    header {
+        height: 53px;
+        align-items: center;
+    }
+    header button , header h1 {
+        font-size: 13px;
+    }
+    .information {
+        width:52%;
+        height: 320px;
+        flex-direction: column;
+        justify-content: start;
+        gap: 10px;
     }
     .information li ,  .information button , .information h3 , .information p,.motATrouver h3{
         font-size: 13px;
@@ -347,14 +428,19 @@ li {
     .information .information_jeu_mode {
         width: 50px;
     }
-    .information_mot {
-        height: 133px;
+    .information .information_mot {
+        height: 162px;
+        width: 100%;
+    }
+    .information .information_jeu {
+        width: 100%;
     }
     .information_image {
-        height: 291px;
+        height: 320px;
         width: 46%;
         top: 54px;
         right: 5px;
+        max-width: 260px;
     }
     .motATrouver {
         padding: 5px;
@@ -378,7 +464,7 @@ li {
         width: 100%;
         height: 100%;
         justify-content: flex-end;
-        gap: 25%;
+        gap: 20%;
     }
     .clavier div:nth-of-type(1){
         gap: 5px;
