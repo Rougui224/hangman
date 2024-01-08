@@ -493,7 +493,7 @@ li {
     }
     .modal {
         width: 80%;
-        height: 50%;
+        height: 390px;
     }
     .modalFormulaireProposerMot fieldset , .modalFormulaireProposerMot .modal_ligne {
         width: 80%;

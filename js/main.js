@@ -42,19 +42,10 @@ window.addEventListener('load', ()=>{
     if(localStorage.getItem('volume')){
         volumeActive = localStorage.getItem('volume')
         if(volumeActive ==='true'){
-            volumeActive = true
-            iconVolumeActive.style.display ='inline'
-            iconVolumeDesactive.style.display ='none'
-
-
+            activerSon()
         }else{
-            iconVolumeActive.style.display ='none'
-            iconVolumeDesactive.style.display ='inline'
-            audioBoutonNonValide.pause()
-            audioBoutonValide.pause()
-            audioDommage.pause()
-            audioFelicitation.pause()
-            volumeActive = false
+           
+            desactiverSon()
         }
     }
     // Vérifier si le thème sombre est déjà activé via le localStorage
@@ -84,22 +75,15 @@ window.addEventListener('load', ()=>{
     // Verifier si l'utilisateur n'avait pas terminé de trouver les lettres avant de quitter le jeu, pour lui permettre de recommencer là ou il s'etait limité
     if(localStorage.getItem('etatJeu')){
         const etatJeu = localStorage.getItem('etatJeu');
-        const etat = JSON.parse(etatJeu)
-        // Restaurer le mot avec les lettres déjà trouvées
-        motChoisi          = etat.motChoisi
-        description        = etat.description
-        lettresIncorrectes = etat.lettresIncorrectes
-        IndicesAchetes     = etat.IndicesAchetes
+        let lettresDejaTrouvees ;
+
+        ({motChoisi,description,lettresIncorrectes,IndicesAchetes,vies,lettresDejaTrouvees}= JSON.parse(etatJeu)) 
         afficherDescription.innerHTML=`" ${description} "` 
         // Restaurer le nombre de vies
-        vies = etat.vies;
-        afficherVie.textContent = vies;
-        afficherImage.src= `images/image-${vies}.png`
-        const lettresSauvegardees = etat.lettresDejaTrouvees;
-        lettresSauvegardees
+        mettreAJourImageEtVies()
         for (let i = 0; i < motChoisi.length; i++) {
             const bouton = document.createElement('button');
-            bouton.textContent = lettresSauvegardees[i] !== '_' ? lettresSauvegardees[i] : '_';
+            bouton.textContent = lettresDejaTrouvees[i];
             afficherMotATrouver.appendChild(bouton);
         }
         lettres = document.querySelectorAll('.motATrouver button')
@@ -147,7 +131,7 @@ window.addEventListener('load', ()=>{
                     }
                     // Vérifier si un bouton correspondant à cette lettre n'a pas encore été découvert
                     const indiceLettreNonDecouvert = indicesLettre.find((index) => lettres[index].textContent === '_');
-                    // indiceLettreNonDecouvert retourne undefined si l'utilasateurs a deja entré la lettre dans le clavier                
+                    // indiceLettreNonDecouvert retourne undefined si l'utilasateur a deja entré la lettre dans le clavier                
                     if(indiceLettreNonDecouvert !== undefined){
                          // Désactiver le bouton correspondant à cette lettre dans le clavier
                         clavier.forEach((bouton) => {
@@ -162,33 +146,36 @@ window.addEventListener('load', ()=>{
 
             })
         }
-        jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
-
-        if(!jeuNonValide){                    
-            motTrouve()
-
-        }
+        verifierMotTrouve()
       
     }else{
         recommencerJeu()
     }
 })
-// ***********fonctions et conditions***************************
+// ***********fonctions et conditions**************************
 let volumeActive = true
+function desactiverSon(){
+    iconVolumeActive.style.display ='none'
+    iconVolumeDesactive.style.display ='inline'
+    audioBoutonNonValide.pause()
+    audioBoutonValide.pause()
+    audioDommage.pause()
+    audioFelicitation.pause()
+    volumeActive = false
+
+}
+function activerSon(){
+    iconVolumeActive.style.display ='inline'
+    iconVolumeDesactive.style.display ='none'
+    volumeActive = true
+}
 function gererVolume(){
     if(volumeActive){
-        iconVolumeActive.style.display ='none'
-        iconVolumeDesactive.style.display ='inline'
-        volumeActive = false
-        audioBoutonNonValide.pause()
-        audioBoutonValide.pause()
-        audioDommage.pause()
-        audioFelicitation.pause()
+       desactiverSon()
+
     }
     else {
-        iconVolumeActive.style.display ='inline'
-        iconVolumeDesactive.style.display ='none'
-        volumeActive = true
+        activerSon()
     }
     localStorage.setItem('volume',volumeActive.toString())
 }
@@ -246,6 +233,7 @@ function fermerElement(element){
     backgroundModal.style.display ='none'
 }
 
+
 // **********************jeu*****************************
 let dernierIndex      = 0
 let variableAleatoire = 0
@@ -256,11 +244,13 @@ let motChoisi         = ''
 let description       = ''
 let lettres           = ''
 let jeuNonValide      = true
-let variableAleatoireAchete , IndicesAchetes=[]
+let variableAleatoireAchete , IndicesAchetes=[], lettresIncorrectes =[]
+
 const audioBoutonValide    = new Audio('./audio/boutonValide.m4a')
 const audioBoutonNonValide = new Audio('./audio/boutonNonValide.m4a')
 const audioFelicitation    = new Audio('./audio/jeuGagne.mp3')
 const audioDommage         = new Audio('./audio/jeuPerdu.mp3')
+
 function genererNombreAleatoire( tableau){
     return  Math.floor(Math.random()* tableau)
 }
@@ -270,7 +260,18 @@ function mettreAjourScore(){
     afficherScore.textContent = score
 
 }
+function mettreAJourImageEtVies(){
+    afficherVie.textContent=vies
+    afficherImage.src= `images/image-${vies}.png`
+}
+function verifierMotTrouve(){
+    jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
 
+    if(!jeuNonValide){                    
+        motTrouve()
+
+    }
+}
 function motTrouve(){
     setTimeout( ()=>{afficherElement(afficherResultat)},1000)
    
@@ -323,14 +324,12 @@ function recommencerJeu(){
         bouton.disabled = false;
     })
     vies=7
-    afficherVie.textContent=vies
-    afficherImage.src= `images/image-${vies}.png`
+    mettreAJourImageEtVies()
     IndicesAchetes=[]
     lettresIncorrectes =[]
     dernierIndex = variableAleatoire
    
 }
-let lettresIncorrectes =[]
 function sauvegarderEtatJeu(){
     const lettresDejaTrouvees = Array.from(lettres).map(bouton => {
         return bouton.classList.contains('boutonValide')? bouton.textContent : '_'
@@ -372,25 +371,18 @@ function verifierJeu(){
 
                     }
                 }
-                // Cette fonction returne true s'il y a un bouton qui contient '_' , et false s'il n'ya plus de bouton qui contient '_'
-                jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
-                // si toutes les lettres sont trouvées, alors le joueur  a gagné
-                if(!jeuNonValide){                    
-                    motTrouve()
-
-                }
+                verifierMotTrouve()
             }else{
                 jouerSon(audioBoutonNonValide)
                 audioBoutonNonValide.volume = 0.6
                 lettresIncorrectes.push(bouton.textContent)
                 vies--
-                afficherVie.textContent=vies
-                afficherImage.src= `images/image-${vies}.png`
                 bouton.disabled = true;
+                mettreAJourImageEtVies()
                 sauvegarderEtatJeu()
                 bouton.classList.add('boutonNonValide')
                 if(vies===0){
-                    afficherImage.src= `images/image-${vies}.png`
+                   mettreAJourImageEtVies()
                     motNonTrouver()
 
                 }
@@ -431,9 +423,7 @@ quitterModalProposerMot.addEventListener('click', ()=>{
 
 boutonModalResultat.addEventListener('click', ()=>{
     audioFelicitation.pause()
-    audioFelicitation.currentTime=0
     audioDommage.pause()
-    audioDommage.currentTime=0
     fermerElement(afficherResultat)
     localStorage.removeItem('etatJeu')
     recommencerJeu()
@@ -468,12 +458,7 @@ acheterUneLettre.addEventListener('click', ()=>{
                 }
             });
         }
-        jeuNonValide = Array.from(lettres).some(bouton => bouton.textContent ==='_')
-
-        if(!jeuNonValide){                    
-            motTrouve()
-
-        }
+       verifierMotTrouve()
 
     }
     else{
