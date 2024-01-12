@@ -76,18 +76,19 @@ window.addEventListener('load', ()=>{
     if(localStorage.getItem('etatJeu')){
         const etatJeu = localStorage.getItem('etatJeu');
         let lettresDejaTrouvees ;
-
+        // Recuperer la sauvegarde de toutes les variables
         ({motChoisi,description,lettresIncorrectes,IndicesAchetes,vies,lettresDejaTrouvees}= JSON.parse(etatJeu)) 
         afficherDescription.innerHTML=`" ${description} "` 
         // Restaurer le nombre de vies
         mettreAJourImageEtVies()
+        // Afficher le mot à trouver
         for (let i = 0; i < motChoisi.length; i++) {
             const bouton = document.createElement('button');
             bouton.textContent = lettresDejaTrouvees[i];
             afficherMotATrouver.appendChild(bouton);
         }
         lettres = document.querySelectorAll('.motATrouver button')
-        // remetre le style des boutons
+        // remetre le style des boutons du mot
         let lettreClavier
         lettres.forEach(bouton=>{
             
@@ -102,6 +103,7 @@ window.addEventListener('load', ()=>{
                 })
             }
         })
+        // remetre le style des boutons du clavier
         lettresIncorrectes.forEach(lettre =>{
             clavier.forEach(bouton =>{
                 if(bouton.textContent === lettre){
@@ -110,7 +112,6 @@ window.addEventListener('load', ()=>{
                 }
             })
         })
-
         // Vérifier si une lettre a été achetée et est présente plusieurs fois dans le mot que l'utilisateur ignore
         if(IndicesAchetes.length>0){
             // Parcourir les lettres déjà achetées
@@ -118,11 +119,9 @@ window.addEventListener('load', ()=>{
                 const lettreAchetee = motChoisi[indice]
                 // Compter le nombre d'occurrences de la lettre achetée dans le mot
                 const occurences    = motChoisi.split(lettreAchetee).length-1
-
                 //  Si la lettre est présente plusieurs fois 
                 if (occurences > 1 ) {
                     const indicesLettre = [];
-
                     // Trouver tous les indices où la lettre achetée se trouve dans le mot
                     for (let i = 0; i < motChoisi.length; i++) {
                         if (motChoisi[i] === lettreAchetee) {
@@ -133,7 +132,7 @@ window.addEventListener('load', ()=>{
                     const indiceLettreNonDecouvert = indicesLettre.find((index) => lettres[index].textContent === '_');
                     // indiceLettreNonDecouvert retourne undefined si l'utilasateur a deja entré la lettre dans le clavier                
                     if(indiceLettreNonDecouvert !== undefined){
-                         // Désactiver le bouton correspondant à cette lettre dans le clavier
+                         // Annuler le style de cette lettre
                         clavier.forEach((bouton) => {
                             if (bouton.textContent.toUpperCase() === lettreAchetee) {
                                 bouton.disabled = false;
@@ -193,6 +192,17 @@ function jouerSon(audio){
     }
 }
 
+function modeSombre(){
+
+    body.className='mode-sombre'
+    root.style.setProperty('--colorPrimaire','#211717')
+    root.style.setProperty('--colorQuaternaire','#dfddc7')
+    root.style.setProperty('--colorTertiaire','#f58b54')
+    root.style.setProperty('--colorSecondaire','#a34a28')
+    boutonMode.style.justifyContent='flex-end'
+    localStorage.setItem('theme','sombre')
+}
+
 function gerertheme(){
 
     // Mettre à jour les variables CSS en fonction du thème choisi
@@ -209,20 +219,9 @@ function gerertheme(){
        modeSombre()
     }
 
-    // Ajoute ou supprime la classe 'mode-sombre' du body
-
 }
 
-function modeSombre(){
 
-    body.className='mode-sombre'
-    root.style.setProperty('--colorPrimaire','#211717')
-    root.style.setProperty('--colorQuaternaire','#dfddc7')
-    root.style.setProperty('--colorTertiaire','#f58b54')
-    root.style.setProperty('--colorSecondaire','#a34a28')
-    boutonMode.style.justifyContent='flex-end'
-    localStorage.setItem('theme','sombre')
-}
 
 function afficherElement(element){
     element.style.display ='flex'
@@ -310,24 +309,28 @@ function recommencerJeu(){
     description          = descriptions[variableAleatoire]
     afficherMotATrouver.innerHTML=''
     afficherDescription.innerHTML=''
+    afficherDescription.innerHTML=`" ${description} "` 
 
+    // Créer les boutons en fonction de la taille du mot pour pouvoir afficher le mot
     for(let i=0 ; i<motChoisi.length; i++) {
         const bouton        = document.createElement('button')
         bouton.textContent  = '_'
         afficherMotATrouver.appendChild(bouton)
     }
+    // recuperer les boutons pour pouvoir les utiliser dans la fonction verifierJeu()
     lettres = document.querySelectorAll('.motATrouver button')
-    afficherDescription.innerHTML=`" ${description} "` 
+
+    // reinitialiser le style de tous les boutons
     clavier.forEach(bouton =>{
         bouton.classList.remove('boutonValide')
         bouton.classList.remove('boutonNonValide')
         bouton.disabled = false;
     })
     vies=7
-    mettreAJourImageEtVies()
     IndicesAchetes=[]
     lettresIncorrectes =[]
     dernierIndex = variableAleatoire
+    mettreAJourImageEtVies()
    
 }
 function sauvegarderEtatJeu(){
@@ -348,53 +351,49 @@ function sauvegarderEtatJeu(){
     
 }
 function verifierJeu(){
-
-    clavier.forEach(bouton =>{
-       
+    // Ecouteur d'evenement sur toutes les lettres
+    clavier.forEach(bouton =>{   
         bouton.addEventListener('click', (event)=>{
             const bouton = event.target
             const lettre = bouton.value.toUpperCase()
+            // Si le mot contient la lettre choisie
             if(motChoisi.includes(lettre)){
                 jouerSon(audioBoutonValide)
                 bouton.classList.add('boutonValide')
                 bouton.disabled = true;
+                // Afficher la lettre
                 for(let i=0; i<motChoisi.length; i++){
-
                     if(motChoisi[i]===lettre){
                         // Ajouter la lettre au tableau des indices qui sont deja trouver pour eviter que l'utilisateur achete  l'indice qu'il a deja trouvé
-
                         IndicesAchetes.push(i)
-
                         lettres[i].textContent=lettre
                         lettres[i].classList.add('boutonValide')
                         sauvegarderEtatJeu()
-
                     }
                 }
                 verifierMotTrouve()
-            }else{
+            }
+            // Sinon
+            else{
                 jouerSon(audioBoutonNonValide)
                 audioBoutonNonValide.volume = 0.6
+                bouton.classList.add('boutonNonValide')
                 lettresIncorrectes.push(bouton.textContent)
                 vies--
                 bouton.disabled = true;
                 mettreAJourImageEtVies()
                 sauvegarderEtatJeu()
-                bouton.classList.add('boutonNonValide')
                 if(vies===0){
                    mettreAJourImageEtVies()
                     motNonTrouver()
-
                 }
             }
         })
-    })
-   
+    }) 
     afficherVie.textContent=vies
     afficherRecord.textContent=record
     afficherScore.textContent = score
     dernierIndex=variableAleatoire
-
 }
 function genererNombreAleatoireAcheter(){
     return  Math.floor(Math.random()*motChoisi.length)
@@ -444,18 +443,20 @@ acheterUneLettre.addEventListener('click', ()=>{
         // Ajouter la lettre au tableau des indices qui sont deja trouver pour eviter que l'utilisateur achete 2fois le même indice
         IndicesAchetes.push(variableAleatoireAchete)
 
-        // Sécuriser 
+        // Sécuriser le style du bouton
         let lettreAchetee = motChoisi[variableAleatoireAchete]
         let occurences    = motChoisi.split(lettreAchetee).length-1
         sauvegarderEtatJeu()
-
+        // si la lettre acheter ne figure qu'une seule fois dans le mot, 
         if(occurences ===1){
             clavier.forEach(bouton => {
+                // Désactiver la lettre dans le clavier et changer le style du bouton
                 if (bouton.textContent.toUpperCase() === lettreAchetee) {
                     bouton.disabled = true;
                     bouton.classList.add('boutonValide')
 
                 }
+                // sinon, on fait rien, pour ne pas permettre à l'utilisateur d'acheter deux lettres au lieu d'une seule
             });
         }
        verifierMotTrouve()
